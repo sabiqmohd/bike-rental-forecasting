@@ -12,8 +12,8 @@ def isolate_artifacts(tmp_path, request):
     Moves existing artifacts to a temporary location before the test,
     and restores them after the test.
     """
-    model_dir = Path("models/prod")
-    data_dir = Path("data/prod_data")
+    model_dir = Path("../models/prod")
+    data_dir = Path("../data/prod_data")
     # Backup existing directories if they exist
     backups = []
     for path in (model_dir, data_dir):
@@ -50,9 +50,9 @@ def test_prod_train_creates_model_and_predictions():
     assert result.returncode == 0, f"Training script failed: {result.stderr}"
 
     # Check that a model file exists in models/prod/
-    model_dir = Path("models/prod")
+    model_dir = Path("../models/prod")
     assert model_dir.exists() and model_dir.is_dir(), "models/prod directory does not exist"
-    model_files = list(model_dir.iterdir())
+    model_files = list(model_dir.glob("*.cbm"))
     assert model_files, "No model file found in models/prod/"
 
     # # Check that prediction outputs are created in data/prod_data/
