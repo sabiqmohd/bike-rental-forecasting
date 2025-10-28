@@ -1,0 +1,41 @@
+name: CI-CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'README.md'
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  IMAGE_TAG: latest
+
+jobs:
+  ci:
+    name: Continuous Integration
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f "app-ml/requirements.txt" ]; then pip install -r app-ml/requirements.txt; fi
+          pip install pytest requests
+
+      - name: Run pytest (end-to-end tests)
+        run: |
+          # run tests in tests/ — these will execute:
+          # - tests/test_prod_train.py  (runs prod_train.py and checks models/prod and data/prod_data)
+          # - tests/test_inference_api.py (starts inference API and hits /predict)
+          pytest -q tests/
