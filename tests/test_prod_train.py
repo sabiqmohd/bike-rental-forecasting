@@ -9,29 +9,34 @@ import pytest
 def isolate_artifacts(tmp_path, request):
     """
     Fixture to isolate and clean up model and prediction artifacts.
-    Moves existing artifacts to a temporary location before the test,
-    and restores them after the test.
     """
     model_dir = Path("../models/prod")
     data_dir = Path("../data/prod_data")
+    
     # Backup existing directories if they exist
     backups = []
     for path in (model_dir, data_dir):
         if path.exists():
             backup = tmp_path / path.name
-            shutil.move(str(path), str(backup))
+            shutil.copytree(str(path), str(backup))
             backups.append((backup, path))
+            # Remove original to start fresh
+            shutil.rmtree(str(path))
+    
     # Create empty directories for the test run
     for path in (model_dir, data_dir):
         path.mkdir(parents=True, exist_ok=True)
+    
     yield
+    
     # Cleanup: remove test-created directories and restore backups
     for path in (model_dir, data_dir):
         if path.exists():
             shutil.rmtree(str(path))
+    
     for backup, original in backups:
-        # Move backup back to original location
-        shutil.move(str(backup), str(original))
+        if backup.exists():
+            shutil.copytree(str(backup), str(original))
 
 def test_prod_train_creates_model_and_predictions():
     """
@@ -39,31 +44,29 @@ def test_prod_train_creates_model_and_predictions():
     that a model file is saved in /models/prod/ and
     predictions are created in /data/prod_data/.
     """
-    # Run the prod_train.py script
+    # Run the prod_train.py script with explicit PYTHONPATH
+    env = os.environ.copy()
+    env['PYTHONPATH'] = os.getcwd()  # Add current directory to Python path
+    
     result = subprocess.run(
         ["python", "app-ml/entrypoint/train.py"],
         check=False,
         capture_output=True,
-        text=True
+        text=True,
+        env=env  # Pass the modified environment
     )
+    
+    # Debug: Print output to understand what's happening
+    print("STDOUT:", result.stdout)
+    print("STDERR:", result.stderr)
+    
     # Ensure the script executed successfully
     assert result.returncode == 0, f"Training script failed: {result.stderr}"
 
     # Check that a model file exists in models/prod/
     model_dir = Path("../models/prod")
     assert model_dir.exists() and model_dir.is_dir(), "models/prod directory does not exist"
+    
+    # Look specifically for .cbm files
     model_files = list(model_dir.glob("*.cbm"))
-    assert model_files, "No model file found in models/prod/"
-
-    # # Check that prediction outputs are created in data/prod_data/
-    # data_dir = Path("../data/prod_data")
-    # assert data_dir.exists() and data_dir.is_dir(), "data/prod_data directory does not exist"
-    # # Check both possible subfolders (csv or parquet) for output files
-    # prediction_files = []
-    # csv_dir = data_dir / "csv"
-    # parquet_dir = data_dir / "parquet"
-    # if csv_dir.exists():
-    #     prediction_files.extend(list(csv_dir.iterdir()))
-    # if parquet_dir.exists():
-    #     prediction_files.extend(list(parquet_dir.iterdir()))
-    # assert prediction_files, "No prediction files found in data/prod_data/"
+    assert model_files, f"No .cbm model file found in models/prod/. Contents: {list(model_dir.iterdir())}"
