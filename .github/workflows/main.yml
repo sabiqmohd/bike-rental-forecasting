@@ -36,6 +36,5 @@ jobs:
       - name: Run pytest (end-to-end tests)
         run: |
           # run tests in tests/ — these will execute:
-          # - tests/test_prod_train.py  (runs prod_train.py and checks models/prod and data/prod_data)
-          # - tests/test_inference_api.py (starts inference API and hits /predict)
+          # - tests/test_prod_train.py  (runs prod_train.py and checks models/prod)
           pytest -q tests/
