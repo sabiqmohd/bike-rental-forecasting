@@ -21,10 +21,10 @@ This **Real-Time Bike Rental Demand Forecasting System** solves a critical busin
 - **Incentive Campaigns**: Targeted promotions during predicted low-demand periods
 - **Operational Planning**: Improved fleet utilization and supply-demand balance
 
-## Application architecture
+<!-- ## Application architecture
 The architecture of the system is shown below:
 
-![ML Pipeline](images/ml-pipeline-architecture.png)
+![ML Pipeline](images/ml-pipeline-architecture.png) -->
 
 ### End-to-End ML Pipeline Architecture
 
@@ -70,7 +70,7 @@ The system implements a comprehensive machine learning pipeline with five distin
 
 ---
 
-## 🚀 Quick Start
+<!-- ## 🚀 Quick Start
 
 ### Option 1: Running Application in Docker (Recommended)
 
@@ -191,6 +191,6 @@ You are **not allowed to**:
 - Resell or redistribute the code as your own product
 - Remove or change the license or attribution
 
-For any use beyond personal or educational purposes, please contact the author for written permission.
+For any use beyond personal or educational purposes, please contact the author for written permission. -->
 
 </div> 
