@@ -41,7 +41,7 @@ jobs:
 
   build-and-push-ecr-image:
     name: Continuous Delivery
-    needs: integration
+    needs: ci
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
