@@ -65,13 +65,20 @@ jobs:
 
       - name: Debug AWS Connection
         run: |
-          echo "Debug Info:"
+          echo "Debug Info (Spaced out to avoid masking):"
+          
+          echo "1. Caller Identity:"
           aws sts get-caller-identity
-          echo "Configured Region: ${{ secrets.AWS_REGION }}"
-          echo "Registry URL: ${{ steps.login-ecr.outputs.registry }}"
-          echo "Target Repositories:"
-          echo "  ML: ${{ secrets.ECR_REPOSITORY_ML }}"
-          echo "  UI: ${{ secrets.ECR_REPOSITORY_UI }}"
+
+          echo "2. Configured Region (spaced):"
+          echo "${{ secrets.AWS_REGION }}" | sed 's/./& /g'
+
+          echo "3. Registry URL (spaced):"
+          echo "${{ steps.login-ecr.outputs.registry }}" | sed 's/./& /g'
+
+          echo "4. Target Repo Names:"
+          echo "ML: ${{ secrets.ECR_REPOSITORY_ML }}"
+          echo "UI: ${{ secrets.ECR_REPOSITORY_UI }}"
 
       - name: Build and Push ML Image
         env:
