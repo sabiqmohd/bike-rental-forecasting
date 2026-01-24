@@ -7,16 +7,16 @@ WORKDIR /app
 # Install compilers and development libraries needed to build and 
 # install Python packages (e.g., numpy, pandas, matplotlib) 
 #with C/C++ extensions for ML and data science.
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        build-essential \
-        gcc \
-        g++ \
-        cmake \
-        python3-dev \
-        libfreetype6-dev \
-        pkg-config \
-        && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && \
+#     apt-get install -y --no-install-recommends \
+#         build-essential \
+#         gcc \
+#         g++ \
+#         cmake \
+#         python3-dev \
+#         libfreetype6-dev \
+#         pkg-config \
+#         && rm -rf /var/lib/apt/lists/*
 
 # Copy only the requirements file to leverage Docker cache
 COPY app-ml/requirements.txt .

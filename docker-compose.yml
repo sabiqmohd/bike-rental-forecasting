@@ -7,6 +7,7 @@ services:
   # This service trains the ML model using the training data
   # It runs once to create the model, then the inference service uses it
   app-ml-train:
+    image: ${ECR_REGISTRY}/${ECR_REPOSITORY_ML}:${IMAGE_TAG:-latest}
     build:
       context: .                    # Build context is the project root
       dockerfile: app-ml/Dockerfile # Use the ML app's Dockerfile
@@ -23,6 +24,7 @@ services:
   # This service provides the REST API for making predictions
   # It loads the trained model and runs the ML pipeline in real-time
   app-ml-inference-api:
+    image: ${ECR_REGISTRY}/${ECR_REPOSITORY_ML}:${IMAGE_TAG:-latest}
     build:
       context: .                    # Build context is the project root
       dockerfile: app-ml/Dockerfile # Use the ML app's Dockerfile
@@ -44,6 +46,7 @@ services:
   # This service provides the web dashboard for visualizing predictions
   # It communicates with the inference API to trigger predictions
   app-ui:
+    image: ${ECR_REGISTRY}/${ECR_REPOSITORY_UI}:${IMAGE_TAG:-latest}
     build:
       context: .                    # Build context is the project root
       dockerfile: app-ui/Dockerfile # Use the UI app's Dockerfile
