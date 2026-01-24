@@ -66,11 +66,14 @@ jobs:
           echo "Registry Alias:"
           aws ecr-public describe-registries --region us-east-1 --query 'registries[0].registryId'
 
-      - name: Login to Amazon ECR
+      - name: Login to Amazon ECR (Manual)
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-        with:
-          registry-type: public
+        run: |
+          # Manual login using AWS CLI to bypass potential action issues
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
+          
+          # Set the registry URL output for subsequent steps
+          echo "registry=public.ecr.aws/$(aws ecr-public describe-registries --region us-east-1 --query 'registries[0].registryId' --output text)" >> $GITHUB_OUTPUT
 
       - name: Build and Push ML Image
         env:
