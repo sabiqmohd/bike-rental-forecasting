@@ -97,7 +97,7 @@ jobs:
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_UI }}
           IMAGE_TAG: latest
         run: |
-          # Build UI image using the app-ui Dockerfile
+          # Build UI image using the app-ui Dockerfile.
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f app-ui/Dockerfile .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
