@@ -71,7 +71,7 @@ jobs:
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_ML }}
           IMAGE_TAG: latest
         run: |
-          # Build ML image using the app-ml Dockerfile
+          # Build ML image using the app-ml Dockerfile.
           # Note: Context is root (.) to include shared 'common' code if needed
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f app-ml/Dockerfile .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
