@@ -134,10 +134,10 @@ jobs:
         run: |
           # Pull the latest images
           # Environment variables are substituted into docker-compose.yml automatically
-          docker-compose pull
+          docker compose pull
           
           # Restart services with new images
-          docker-compose up -d
+          docker compose up -d
 
       - name: Cleanup
         run: |
