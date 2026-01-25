@@ -106,7 +106,7 @@ jobs:
 
       - name: Verify Public ECR Access
         run: |
-          echo "Testing Public ECR Access..."
+          echo "Testing Public ECR Access...."
           # This command lists your public repositories. 
           # If this fails, your IAM User is missing 'AmazonElasticContainerRegistryPublicFullAccess'
           aws ecr-public describe-repositories --region us-east-1
