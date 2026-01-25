@@ -148,7 +148,7 @@ jobs:
           echo "Full ML Image: $ECR_REGISTRY/$ECR_REPOSITORY_ML:$IMAGE_TAG"
           echo "Full UI Image: $ECR_REGISTRY/$ECR_REPOSITORY_UI:$IMAGE_TAG"
           
-          # Pull the latest images
+          # Pull the latest images.
           docker compose pull
           
           # Restart services with new images
