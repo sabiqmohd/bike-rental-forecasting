@@ -96,42 +96,42 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f app-ui/Dockerfile .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-  # continuous-deployment:
-  #   name: Continuous Deployment
-  #   needs: build-and-push-ecr-image
-  #   runs-on: self-hosted
-  #   steps:
-  #     - name: Checkout Code
-  #       uses: actions/checkout@v3
+  continuous-deployment:
+    name: Continuous Deployment
+    needs: build-and-push-ecr-image
+    runs-on: self-hosted
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-  #     - name: Verify Public ECR Access
-  #       run: |
-  #         echo "Testing Public ECR Access..."
-  #         # This command lists your public repositories. 
-  #         # If this fails, your IAM User is missing 'AmazonElasticContainerRegistryPublicFullAccess'
-  #         aws ecr-public describe-repositories --region us-east-1
+      - name: Verify Public ECR Access
+        run: |
+          echo "Testing Public ECR Access..."
+          # This command lists your public repositories. 
+          # If this fails, your IAM User is missing 'AmazonElasticContainerRegistryPublicFullAccess'
+          aws ecr-public describe-repositories --region us-east-1
           
-  #         echo "Registry Alias:"
-  #         aws ecr-public describe-registries --region us-east-1 --query 'registries[0].registryId'
+          echo "Registry Alias:"
+          aws ecr-public describe-registries --region us-east-1 --query 'registries[0].registryId'
 
-  #     - name: Login to Amazon ECR
-  #       id: login-ecr
-  #       uses: aws-actions/amazon-ecr-login@v1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-  #     - name: Pull and Deploy with Docker Compose
-  #       env:
-  #         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-  #         ECR_REPOSITORY_ML: ${{ secrets.ECR_REPOSITORY_ML }}
-  #         ECR_REPOSITORY_UI: ${{ secrets.ECR_REPOSITORY_UI }}
-  #         IMAGE_TAG: latest
-  #       run: |
-  #         # Pull the latest images
-  #         # Environment variables are substituted into docker-compose.yml automatically
-  #         docker-compose pull
+      - name: Pull and Deploy with Docker Compose
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY_ML: ${{ secrets.ECR_REPOSITORY_ML }}
+          ECR_REPOSITORY_UI: ${{ secrets.ECR_REPOSITORY_UI }}
+          IMAGE_TAG: latest
+        run: |
+          # Pull the latest images
+          # Environment variables are substituted into docker-compose.yml automatically
+          docker-compose pull
           
-  #         # Restart services with new images
-  #         docker-compose up -d
+          # Restart services with new images
+          docker-compose up -d
 
-  #     - name: Cleanup
-  #       run: |
-  #         docker system prune -f
+      - name: Cleanup
+        run: |
+          docker system prune -f
