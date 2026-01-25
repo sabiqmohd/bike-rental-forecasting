@@ -137,8 +137,18 @@ jobs:
           ECR_REPOSITORY_UI: ${{ secrets.ECR_REPOSITORY_UI }}
           IMAGE_TAG: latest
         run: |
+          # Ensure we're logged in to Public ECR
+          echo "Logging in to Public ECR..."
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
+          
+          # Debug: Show what images we're trying to pull
+          echo "Registry: $ECR_REGISTRY"
+          echo "ML Repository: $ECR_REPOSITORY_ML"
+          echo "UI Repository: $ECR_REPOSITORY_UI"
+          echo "Full ML Image: $ECR_REGISTRY/$ECR_REPOSITORY_ML:$IMAGE_TAG"
+          echo "Full UI Image: $ECR_REGISTRY/$ECR_REPOSITORY_UI:$IMAGE_TAG"
+          
           # Pull the latest images
-          # Environment variables are substituted into docker-compose.yml automatically
           docker compose pull
           
           # Restart services with new images
