@@ -72,8 +72,8 @@ jobs:
           # Manual login using AWS CLI to bypass potential action issues
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
           
-          # Set the registry URL output for subsequent steps
-          echo "registry=public.ecr.aws/$(aws ecr-public describe-registries --region us-east-1 --query 'registries[0].registryId' --output text)" >> $GITHUB_OUTPUT
+          # Set the registry URL output for subsequent steps (use registryAlias for Public ECR)
+          echo "registry=public.ecr.aws/$(aws ecr-public describe-registries --region us-east-1 --query 'registries[0].aliases[0].name' --output text)" >> $GITHUB_OUTPUT
 
       - name: Build and Push ML Image
         env:
@@ -127,8 +127,8 @@ jobs:
           # Manual login using AWS CLI for Public ECR
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
           
-          # Set the registry URL output for subsequent steps
-          echo "registry=public.ecr.aws/$(aws ecr-public describe-registries --region us-east-1 --query 'registries[0].registryId' --output text)" >> $GITHUB_OUTPUT
+          # Set the registry URL output for subsequent steps (use registryAlias for Public ECR)
+          echo "registry=public.ecr.aws/$(aws ecr-public describe-registries --region us-east-1 --query 'registries[0].aliases[0].name' --output text)" >> $GITHUB_OUTPUT
 
       - name: Pull and Deploy with Docker Compose
         env:
