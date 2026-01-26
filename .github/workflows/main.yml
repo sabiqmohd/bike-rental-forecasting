@@ -124,7 +124,7 @@ jobs:
       - name: Login to Amazon ECR (Manual)
         id: login-ecr
         run: |
-          # Manual login using AWS CLI for Public ECR.
+          # Manual login using AWS CLI for Public ECR
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
           
           # Set the registry URL output for subsequent steps (use registryAlias for Public ECR)
