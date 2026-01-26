@@ -137,7 +137,7 @@ jobs:
           ECR_REPOSITORY_UI: ${{ secrets.ECR_REPOSITORY_UI }}
           IMAGE_TAG: latest
         run: |
-          # Ensure we're logged in to Public ECR.
+          # Ensure we're logged in to Public ECR
           echo "Logging in to Public ECR..."
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
           
